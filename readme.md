@@ -1,22 +1,13 @@
 # ToolsLib
 
-收录到[PytorchNetHub](https://github.com/bobo0810/PytorchNetHub)
+- 收录到[PytorchNetHub](https://github.com/bobo0810/PytorchNetHub)
+- [Wiki文档](https://github.com/bobo0810/botools/wiki)
 
 ## 安装
 
 ```bash
 pip install git+https://github.com/bobo0810/botools.git
 ```
-
-
-
-## 功能
-
-|          | API                                                          |
-| -------- | ------------------------------------------------------------ |
-| 图片操作 | - md5去重<br>- 下载url图片<br/>- 可视化bbox<br/>- 验证图像完整性<br/>- Tensor恢复为图片 |
-| TXT操作  | - 批量写入<br/>- 批量读取                                    |
-| List操作 | - 分块，每块长度M<br/>- 均分为N块                            |
 
 ## 参考
 
