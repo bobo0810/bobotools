@@ -9,5 +9,6 @@ setup(
         'tqdm',              # 进度条
         'opencv-python',
         'numpy',
+        'torch',
     ]
 )
