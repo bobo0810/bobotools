@@ -1,12 +1,12 @@
 # ToolsLib
 
 - 收录到[PytorchNetHub](https://github.com/bobo0810/PytorchNetHub)
-- [Wiki文档](https://github.com/bobo0810/botools/wiki)
+- [Wiki文档](https://github.com/bobo0810/bobotools/wiki)
 
 ## 安装
 
 ```bash
-pip install git+https://github.com/bobo0810/botools.git
+pip install git+https://github.com/bobo0810/bobotools.git
 ```
 
 ## 参考

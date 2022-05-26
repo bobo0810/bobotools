@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name="botools",
+    name="bobotools",
     packages=find_packages(),
     license="MIT",
     author="bobo0810",
-    description="botools",
+    description="bobotools",
     long_description=open("README.md", "r").read(),
     long_description_content_type="text/markdown",
     version="0.1.0",  # 版本
