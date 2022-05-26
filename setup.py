@@ -1,10 +1,9 @@
 from setuptools import setup, find_packages
-from pathlib import Path
-from setuptools import setup
+import os
 
-PATH_HERE = Path(__file__).parent
+cur_path = os.path.abspath(os.path.dirname(__file__))
 
-with open(PATH_HERE / "requirements.txt", encoding="utf-8") as fp:
+with open(cur_path + "/requirements.txt", encoding="utf-8") as fp:
     requirements = [rq.rstrip() for rq in fp.readlines() if not rq.startswith("#")]
 
 setup(
