@@ -6,7 +6,7 @@
 ## 安装
 
 ```bash
-pip install git+https://github.com/bobo0810/bobotools.git
+pip install bobotools
 ```
 
 ## 参考
