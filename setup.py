@@ -1,10 +1,7 @@
 from setuptools import setup, find_packages
-import os
 
-cur_path = os.path.abspath(os.path.dirname(__file__))
 
-with open(cur_path + "/requirements.txt", encoding="utf-8") as fp:
-    requirements = [rq.rstrip() for rq in fp.readlines() if not rq.startswith("#")]
+requirements=['tqdm', 'opencv-python', 'numpy', 'torch']
 
 setup(
     name="botools",
