@@ -7,6 +7,8 @@
 
 ```bash
 pip install bobotools
+或者
+pip install git+https://github.com/bobo0810/bobotools.git
 ```
 
 ## 参考
