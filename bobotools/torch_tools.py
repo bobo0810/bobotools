@@ -1,5 +1,6 @@
 import torch
 import time
+from tqdm import tqdm
 class Torch_Tools(object):
     """
     Pytorch操作
