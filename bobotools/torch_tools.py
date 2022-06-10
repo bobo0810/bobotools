@@ -1,5 +1,5 @@
 import torch
-
+import time
 class Torch_Tools(object):
     """
     Pytorch操作
