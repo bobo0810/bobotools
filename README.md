@@ -1,5 +1,5 @@
 # bobotools
-[![Actions Status](https://github.com/bobo0810/bobotools/workflows/build/badge.svg)](https://github.com/bobo0810/bobotools/actions)
+[![Actions Status](https://github.com/bobo0810/bobotools/workflows/build/badge.svg)](https://github.com/bobo0810/Classification/actions)
 
 - 收录到[PytorchNetHub](https://github.com/bobo0810/PytorchNetHub)
 - [Wiki文档](https://github.com/bobo0810/bobotools/wiki)
