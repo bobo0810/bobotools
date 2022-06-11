@@ -9,7 +9,7 @@ setup(
     description="bobotools",
     long_description=open("README.md", "r").read(),
     long_description_content_type="text/markdown",
-    version="0.4.0",  # 版本
+    version="0.4.1",  # 版本
     install_requires=["tqdm", "opencv-python", "numpy", "torch"],
     python_requires=">=3.6",
     include_package_data=True,
