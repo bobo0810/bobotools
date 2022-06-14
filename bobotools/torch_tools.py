@@ -21,8 +21,12 @@ class Torch_Tools(object):
         """
         img = torch.ones(input_shape)
 
+        flag = model.training  # 记录模型是训练模式或评估模式
+        model.eval()
+
         device_list = ["cpu", "cuda:0"] if torch.cuda.is_available() else ["cpu"]
         time_dict = {"input_shape": input_shape}
+
         for device in device_list:
             img = img.to(device)
             model.to(device)
@@ -41,6 +45,6 @@ class Torch_Tools(object):
                     torch.cuda.synchronize()
             end = time.time()
             total_time = ((end - start) * 1000) / float(iter_nums)
-
             time_dict[device] = "%.2f ms/img" % total_time
+        model.training = flag  # 模型恢复为原状态
         return time_dict
