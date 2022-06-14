@@ -1,39 +1,65 @@
-import os
 import hashlib
 from tqdm import tqdm
 import numpy as np
-import uuid
 import cv2
-import socket
-from urllib.request import urlretrieve
 import torch
-
+import base64
+import urllib.request
 
 class Img_Tools(object):
     """
-    Img操作
+    Img工具类
     """
 
     def __init__(self):
         pass
-
+    
     @staticmethod
-    def down_urls(url_list, save_path, time=5):
-        """
-        根据url下载图片,随机uuid命名。
+    def read_web_img(image_url=None,image_file=None,image_base64=None,url_time_out=10):
+        '''
+        参数三选一，当传入多个参数，仅返回最高优先级的图像
 
-        url_list(list): URL列表 eg:['http://a.jpg', http://aaacc', ...]
-        save_path(str): 图像保存路径
-        time(int):耗时限制，单位s
-        """
-        socket.setdefaulttimeout(time)  # 超时限制
-        assert len(url_list) > 0 and os.path.isdir(save_path)  # 验证文件夹是否存在
-        print("start download imgs...")
-        for url in tqdm(url_list):
+        优先级： 文件 > base64 > url 
+        
+        url_time_out : URL下载耗时限制，默认10秒
+        '''
+        if image_file:
             try:
-                urlretrieve(url, save_path + str(uuid.uuid1()) + ".jpg")
-            except socket.timeout:
-                print("error url: ", url, "\n")
+                img = cv2.imdecode(np.frombuffer(image_file, np.uint8), cv2.IMREAD_COLOR)
+                if img.any():
+                    return img
+                else:
+                    return 'IMAGE_ERROR_UNSUPPORTED_FORMAT'
+            except:
+                return 'IMAGE_ERROR_UNSUPPORTED_FORMAT'
+
+        elif image_base64:
+            try:
+                img = base64.b64decode(image_base64)
+                img_array = np.frombuffer(img, np.uint8)
+                img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+                if img.any():
+                    return img
+                else:
+                    return 'IMAGE_ERROR_UNSUPPORTED_FORMAT'
+            except:
+                return 'IMAGE_ERROR_UNSUPPORTED_FORMAT'
+        elif image_url:
+            try:
+                resp = urllib.request.urlopen(image_url,time_out=url_time_out)
+            except:
+                return 'URL_DOWNLOAD_TIMEOUT'
+            try:
+                image = np.asarray(bytearray(resp.read()), dtype="uint8")
+                img = cv2.imdecode(image, cv2.IMREAD_COLOR)
+                if img.any():
+                    return img
+                else:
+                    return 'IMAGE_ERROR_UNSUPPORTED_FORMAT'
+            except:
+                return 'INVALID_IMAGE_URL'
+        else:
+            return 'MISSING_ARGUMENTS'
 
     @staticmethod
     def plot_bbox(img, bbox, name, prob):
