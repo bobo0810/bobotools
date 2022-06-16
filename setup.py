@@ -1,5 +1,10 @@
 from setuptools import setup, find_packages
+import os
+ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
 
+f= open (os.path.join(ROOT_DIR, 'requirements.txt'),'r')
+install_requires = [line.strip()  for line in  f.readlines()]
+f.close()
 
 setup(
     name="bobotools",
@@ -9,8 +14,8 @@ setup(
     description="bobotools",
     long_description=open("README.md", "r").read(),
     long_description_content_type="text/markdown",
-    version="0.4.4",  # 版本
-    install_requires=["tqdm", "opencv-python", "numpy", "torch"],
+    version="0.4.5",  # 版本
+    install_requires=install_requires,
     python_requires=">=3.6",
     include_package_data=True,
     classifiers=[
