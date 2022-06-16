@@ -1,0 +1,21 @@
+name: pytest
+
+on: push
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.6", "3.7", "3.8", "3.9"]
+
+    steps:
+    - name: Checkout codes # 获取源码，并进入项目根目录
+      uses: actions/checkout@main
+    - name: Installation depends # 安装依赖
+      run: | 
+        pip install -r requirements.txt
+    - name: Start test # 自动化测试
+      run: | 
+        pytest -s test.py 
