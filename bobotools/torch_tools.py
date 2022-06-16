@@ -1,6 +1,4 @@
-import torch
-import time
-from tqdm import tqdm
+from .common.tools import get_model_size,get_model_time
 class Torch_Tools(object):
     """
     Pytorch操作
@@ -10,41 +8,21 @@ class Torch_Tools(object):
         pass
     
     @staticmethod
-    def cal_model_time(input_shape, model, warmup_nums=100, iter_nums=300):
+    def get_model_info(input_shape, model):
         """
-        统计 模型前向耗时
+        获取模型信息，包括模型大小、前向推理耗时等
         
         input_shape: 输入形状 eg:[1,3,224,224]
         model: 模型
-        warmup_nums: 预热次数
-        iter_nums: 总迭代次数，计算平均耗时
         """
-        img = torch.ones(input_shape)
+        result_dict = {"input_shape": input_shape}
 
-        flag = model.training  # 记录模型是训练模式或评估模式
-        model.eval()
-
-        device_list = ["cpu", "cuda:0"] if torch.cuda.is_available() else ["cpu"]
-        time_dict = {"input_shape": input_shape}
-
-        for device in device_list:
-            img = img.to(device)
-            model.to(device)
-
-            # 预热
-            for _ in range(warmup_nums):
-                model(img)
-                if "cuda" in device:
-                    torch.cuda.synchronize()
-            # 正式
-            start = time.time()
-            for _ in tqdm(range(iter_nums)):
-                model(img)
-                # 每次推理，均同步一次。算均值
-                if "cuda" in device:
-                    torch.cuda.synchronize()
-            end = time.time()
-            total_time = ((end - start) * 1000) / float(iter_nums)
-            time_dict[device] = "%.2f ms/img" % total_time
-        model.training = flag  # 模型恢复为原状态
-        return time_dict
+        # 获取模型大小
+        size_dict=get_model_size(model)
+        result_dict.update(size_dict)
+        
+        # 前向推理耗时
+        time_dict=get_model_time(input_shape, model)
+        result_dict.update(time_dict)
+        
+        return result_dict
