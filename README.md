@@ -1,13 +1,13 @@
 # bobotools
 
 - 收录到[PytorchNetHub](https://github.com/bobo0810/PytorchNetHub)
-- [Wiki文档](https://github.com/bobo0810/bobotools/wiki)
 
 ## 安装
 
 ```bash
-稳定: pip install bobotools
-新特性: pip install git+https://github.com/bobo0810/bobotools.git
+pip install bobotools
+or
+pip install git+https://github.com/bobo0810/bobotools.git
 ```
 
 ## 工具类
