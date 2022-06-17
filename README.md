@@ -11,20 +11,20 @@ pip install git+https://github.com/bobo0810/bobotools.git
 ```
 
 ## 工具类
-### Pytorch
+### Pytorch(torch_tools)
 - 获取模型信息(模型大小、前向推理耗时等)
 
-### 图像
+### 图像(img_tools)
 - md5去重
 - 读取在线图片(url/base64/file)
 - 可视化bbox
 - 验证图像完整性
 - Tensor恢复为图片
-### 文本
+### 文本(txt_tools)
 - 批量写入
 - 批量读取
 
-### 列表
+### 列表(list_tools)
 - 分块，每块长度M
 - 均分为N块
 
