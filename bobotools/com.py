@@ -22,6 +22,10 @@ def get_model_time(input_shape,model,warmup_nums=100, iter_nums=300):
     time_dict={}
 
     img = torch.ones(input_shape)
+
+    flag = model.training  # 记录模型是训练模式或评估模式
+    model.eval()
+
     device_list = ["cuda:0","cpu"] if torch.cuda.is_available() else ["cpu"]
     for device in device_list:
         img = img.to(device)
@@ -42,4 +46,5 @@ def get_model_time(input_shape,model,warmup_nums=100, iter_nums=300):
         end = time.time()
         total_time = ((end - start) * 1000) / float(iter_nums)
         time_dict[device+"(ms)"]=round(total_time, 2)
+    model.training = flag  # 模型恢复为原状态
     return time_dict
