@@ -1,4 +1,4 @@
-from .common.tools import get_model_size,get_model_time
+from .com import get_model_size,get_model_time
 class Torch_Tools(object):
     """
     Pytorch操作

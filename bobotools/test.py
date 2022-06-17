@@ -1,6 +1,8 @@
 import torchvision.models as models
-from bobotools.torch_tools import Torch_Tools
-
+from .torch_tools import Torch_Tools
+'''
+pytest自动化测试
+'''
 #=================Torch工具类==============================
 def test_get_model_info():
     model = models.resnet18(pretrained=False)

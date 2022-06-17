@@ -15,7 +15,8 @@ jobs:
       uses: actions/checkout@main
     - name: Installation depends # 安装依赖
       run: | 
-        pip install -r requirements.txt
+        pip install -r bobotools/requirements.txt
     - name: Start test # 自动化测试
       run: | 
+        cd bobotools/
         pytest -s test.py 
