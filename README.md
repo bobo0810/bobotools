@@ -18,7 +18,7 @@ pip install git+https://github.com/bobo0810/bobotools.git
 ### 图像(img_tools)
 - md5去重
 - 读取在线图片(url/base64/file)
-- 可视化bbox
+- 可视化yolo结果
 - 验证图像完整性
 - Tensor恢复为图片
 ### 文本(txt_tools)

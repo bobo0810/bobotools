@@ -5,6 +5,7 @@ import cv2
 import torch
 import base64
 import urllib.request
+import os
 
 class Img_Tools(object):
     """
@@ -62,47 +63,6 @@ class Img_Tools(object):
             return 'MISSING_ARGUMENTS'
 
     @staticmethod
-    def plot_bbox(img, bbox, name, prob):
-        """
-        绘制bbox后原格式返回
-
-        img(numpy): cv2读取的图像[H,W,C]
-        bbox(list):  锚框归一化后的坐标[N,4]. 即中心点坐标xy、锚框宽高wh. eg:[[0.61,0.64,0.12,0.20],...]
-        name(list): 锚框对应类别[N]. eg:['cat', 'dog', ...]
-        prob(list): 锚框对应概率[N]. eg:[0.9, 0.8, ...]
-
-        return
-        img(numpy): 已绘制的图像[H,W,C]
-        """
-        assert type(img) is np.ndarray
-        assert len(bbox) == len(name) == len(prob)
-
-        height, width, _ = img.shape
-        img = np.ascontiguousarray(img)  # 内存连续
-
-        lw = 3  # 线条宽度宽
-        color, txt_color = (0, 0, 255), (0, 0, 255)  # 锚框、文字颜色
-        tl = round(0.002 * (width + height) / 2) + 1  # 锚框、文字的粗细
-
-        for (x, y, w, h), name_i, prob_i in zip(bbox, name, prob):
-            c1 = int((x - w / 2) * width), int((y - h / 2) * height)
-            c2 = int((x + w / 2) * width), int((y + h / 2) * height)
-            cv2.rectangle(
-                img, c1, c2, color, thickness=tl, lineType=cv2.LINE_AA
-            )  # 绘制锚框
-            cv2.putText(
-                img,
-                name_i + "_" + str(round(prob_i, 2)),
-                (c1[0], c1[1] - 2),
-                0,
-                lw / 3,
-                txt_color,
-                thickness=tl,
-                lineType=cv2.LINE_AA,
-            )  # 绘制类别概率
-        return img
-
-    @staticmethod
     def filter_md5(imgs_list, compare_list=[]):
         """
         基于md5对imgs_list图像自身去重，返回重复图像的列表
@@ -110,7 +70,6 @@ class Img_Tools(object):
 
         若文件读取出错，则过滤掉
         """
-
         ###########################内部方法######################################
         def get_md5(file):
             """计算md5"""
@@ -197,3 +156,61 @@ class Img_Tools(object):
         if BCHW2BHWC:
             tensor = tensor.permute(0, 2, 3, 1)
         return tensor
+
+    @staticmethod
+    def plot_yolo(img_path,txt_path,class_list,save_path,vis_conf=0.,lw=6):
+        '''
+        可视化yolo结果
+        :param img_path: 图像路径 eg:/home/xxx.jpg
+        :param txt_path: 文件路径  eg:/home/xxx.txt
+        :param class_list: 类别列表 eg:['cat','dog']
+        :param save_path: 保存路径  eg:/home/
+        :param vis_conf: 超过该置信度阈值再可视化.(txt存在conf时生效)
+        :param lw: 文字大小
+        '''
+        assert os.path.exists(img_path)
+        assert os.path.exists(txt_path)
+        if not os.path.exists(save_path):
+            os.makedirs(save_path)
+
+        # 读取图像
+        img = cv2.imread(img_path)
+        height, width, _ = img.shape
+        img = np.ascontiguousarray(img)  # 内存连续
+        color, txt_color = (0, 0, 255), (0, 0, 255)  # 锚框、文字颜色
+        tl = round(0.002 * (width + height) / 2) + 1  # 锚框、文字的粗细
+
+        with open(txt_path, "r") as f:
+            annotations = f.readlines()
+            for ann in annotations:
+                ann = list(map(float, ann.split()))
+                # 过滤标签内空格行
+                if len(ann) == 0:
+                    continue
+                ann[0] = int(ann[0]) 
+                if len(ann) == 6:
+                    cls, x, y, w, h, conf = ann
+                    class_info=class_list[cls] + "_" + str(round(conf, 2)) 
+                    if conf < vis_conf:
+                        continue
+                elif len(ann) == 5: 
+                    cls, x, y, w, h = ann
+                    class_info=class_list[cls] 
+                color = (0, 0, 255)
+                c1 = int((x - w / 2) * width), int((y - h / 2) * height)
+                c2 = int((x + w / 2) * width), int((y + h / 2) * height)
+                # 绘制锚框
+                cv2.rectangle(img, c1, c2, color, thickness=tl, lineType=cv2.LINE_AA)  
+                # 绘制文本
+                cv2.putText(
+                    img,
+                    class_info,
+                    (c1[0], c1[1] - 2),
+                    0,
+                    lw / 3,
+                    txt_color,
+                    thickness=tl,
+                    lineType=cv2.LINE_AA,
+                )  
+        img_name=os.path.basename(img_path)
+        cv2.imwrite(os.path.join(save_path, img_name), img)
