@@ -12,7 +12,7 @@ pip install git+https://github.com/bobo0810/bobotools.git
 
 ## 工具类
 ### Pytorch
-- 获取模型信息(模型大小、前向推理耗时等)
+- 获取模型信息(模型大小、计算量、参数量、前向推理耗时等)
 
 ### 图像
 - md5去重

@@ -1,6 +1,7 @@
 import torch
 import time
 import os
+from ptflops import get_model_complexity_info
 cur_path = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -13,6 +14,14 @@ def get_model_size(model):
     model_size = os.path.getsize(model_path) / float(1024 * 1024)
     os.remove(model_path)
     return {"model_size(MB)":round(model_size, 2)}
+
+def get_model_complexity(input_shape,model):
+    '''
+    获取模型复杂度，即参数量Params、计算量FLOPs
+    '''
+    B,C,H,W=input_shape
+    flops, params = get_model_complexity_info(model, (C,H,W), as_strings=True,print_per_layer_stat=False, verbose=False)
+    return {"FLOPs":flops,"Params":params}         
 
 @torch.no_grad()
 def get_model_time(input_shape,model,warmup_nums=100, iter_nums=300):

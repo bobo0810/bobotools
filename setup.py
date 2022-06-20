@@ -5,7 +5,7 @@ ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
 # f= open (os.path.join(ROOT_DIR, 'bobotools/requirements.txt'),'r')
 # install_requires = [line.strip()  for line in  f.readlines()]
 # f.close()
-install_requires=['pytest','tqdm','opencv-python-headless','numpy','torch','torchvision']
+install_requires=['pytest','tqdm','opencv-python-headless','numpy','ptflops','torch','torchvision']
 
 setup(
     name="bobotools",

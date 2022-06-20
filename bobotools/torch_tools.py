@@ -1,4 +1,4 @@
-from .com import get_model_size,get_model_time
+from .com import get_model_size,get_model_time,get_model_complexity
 class Torch_Tools(object):
     """
     Pytorch操作
@@ -20,7 +20,11 @@ class Torch_Tools(object):
         # 获取模型大小
         size_dict=get_model_size(model)
         result_dict.update(size_dict)
-        
+
+        # 获取模型复杂度
+        complex_dict=get_model_complexity(input_shape, model)
+        result_dict.update(complex_dict)
+
         # 前向推理耗时
         time_dict=get_model_time(input_shape, model)
         result_dict.update(time_dict)
