@@ -13,7 +13,7 @@ def get_model_size(model):
     torch.save(model, model_path)
     model_size = os.path.getsize(model_path) / float(1024 * 1024)
     os.remove(model_path)
-    return {"model_size(MB)":round(model_size, 2)}
+    return {"model_size":str(round(model_size, 2))+"MB"}
 
 def get_model_complexity(input_shape,model):
     '''
@@ -54,6 +54,6 @@ def get_model_time(input_shape,model,warmup_nums=100, iter_nums=300):
                 torch.cuda.synchronize()
         end = time.time()
         total_time = ((end - start) * 1000) / float(iter_nums)
-        time_dict[device+"(ms)"]=round(total_time, 2)
+        time_dict[device]=str(round(total_time, 2))+"ms"
     model.training = flag  # 模型恢复为原状态
     return time_dict
