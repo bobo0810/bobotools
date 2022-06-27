@@ -15,7 +15,7 @@ setup(
     description="bobotools",
     long_description=open("README.md", "r").read(),
     long_description_content_type="text/markdown",
-    version="0.4.7.2",  # 版本
+    version="0.4.7.3",  # 版本
     install_requires=install_requires,
     python_requires=">=3.6",
     include_package_data=True,
