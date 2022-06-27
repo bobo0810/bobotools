@@ -16,7 +16,7 @@ pip install git+https://github.com/bobo0810/bobotools.git
 |  方法   | 功能  |
 |  ----  | ----  |
 | get_model_info  | 获取模型信息(模型大小、计算量、参数量、前向推理耗时等) |
-
+| tensor2img  | Tenso恢复为图像，方便可视化|
 
 
 ### 图像(img_tools)
@@ -25,7 +25,6 @@ pip install git+https://github.com/bobo0810/bobotools.git
 | read_web_img  | 读取在线图片(url/base64/file) |
 | filter_md5  | 对输入的图像列表，互相去重，返回重复图像列表|
 | verify_integrity  | 对输入的图像列表，验证完整性，返回错误图像列表|
-| tensor2img  | Tenso恢复为图像，用于可视化|
 | plot_yolo  | 可视化yolo结果|
 
 
