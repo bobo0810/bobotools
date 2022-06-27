@@ -2,7 +2,7 @@ import os
 import sys
 import glob
 
-rootpath = os.path.abspath(os.path.dirname(__file__))
+rootpath = os.path.abspath(os.path.dirname(__file__))+"/../"
 sys.path.append(rootpath)
 sys.path.extend(glob.glob(rootpath + "/*"))
 

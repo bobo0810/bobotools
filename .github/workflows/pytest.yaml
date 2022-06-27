@@ -16,6 +16,6 @@ jobs:
     - name: Installation depends # 安装依赖
       run: | 
         pip install -r bobotools/requirements.txt
-    - name: Start test # 自动化测试
+    - name: Start auto test # 自动化测试
       run: | 
-        pytest -s test.py 
+        pytest -s test/test.py 
