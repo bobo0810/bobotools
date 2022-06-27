@@ -13,7 +13,7 @@ def get_model_size(model):
     torch.save(model, model_path)
     model_size = os.path.getsize(model_path) / float(1024 * 1024)
     os.remove(model_path)
-    return {"model_size":str(round(model_size, 2))+"MB"}
+    return {"model_size":str(round(model_size, 2))+" MB"}
 
 def get_model_complexity(input_shape,model):
     '''
@@ -32,7 +32,10 @@ def get_model_time(input_shape,model,warmup_nums=100, iter_nums=300):
 
     img = torch.ones(input_shape)
 
-    flag = model.training  # 记录模型是训练模式或评估模式
+    # 记录原模型状态
+    ori_flag = model.training  
+    ori_device= next(model.parameters()).device
+
     model.eval()
 
     device_list = ["cuda:0","cpu"] if torch.cuda.is_available() else ["cpu"]
@@ -54,6 +57,8 @@ def get_model_time(input_shape,model,warmup_nums=100, iter_nums=300):
                 torch.cuda.synchronize()
         end = time.time()
         total_time = ((end - start) * 1000) / float(iter_nums)
-        time_dict[device]=str(round(total_time, 2))+"ms"
-    model.training = flag  # 模型恢复为原状态
+        time_dict[device]=str(round(total_time, 2))+" ms"
+    # 恢复到原状态
+    model.training = ori_flag  
+    model.to(ori_device)
     return time_dict
