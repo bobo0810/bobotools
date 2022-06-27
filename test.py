@@ -1,7 +1,14 @@
 import os
-current_dir = os.path.abspath(os.path.dirname(__file__))
+import sys
+import glob
+
+rootpath = os.path.abspath(os.path.dirname(__file__))
+sys.path.append(rootpath)
+sys.path.extend(glob.glob(rootpath + "/*"))
+
+
 import torchvision.models as models
-from .torch_tools import Torch_Tools
+from bobotools.torch_tools import Torch_Tools
 '''
 pytest自动化测试
 '''

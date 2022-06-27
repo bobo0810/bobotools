@@ -18,5 +18,4 @@ jobs:
         pip install -r bobotools/requirements.txt
     - name: Start test # 自动化测试
       run: | 
-        cd bobotools/
         pytest -s test.py 
