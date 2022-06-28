@@ -1,5 +1,9 @@
-from .com import get_model_size,get_model_time,get_model_complexity
 import sys
+import numpy as np
+from .com import get_model_size,get_model_time,get_model_complexity
+from pytorch_grad_cam import GradCAM
+from pytorch_grad_cam.utils.image import show_cam_on_image,deprocess_image
+import torch
 class Torch_Tools(object):
     """
     Pytorch操作
@@ -56,3 +60,47 @@ class Torch_Tools(object):
         if BCHW2BHWC:
             tensor = tensor.permute(0, 2, 3, 1)
         return tensor
+    
+    @staticmethod
+    def vis_cam(model, img_tensor, pool_name="global_pool"):
+        """
+        可视化注意力图
+        建议: 请打印网络结构,确认当前模型的全局池化层名称, 赋值pool_name即可。
+
+        img_tensor(tensor): 网络的输入Tensor  shape[B,C,H,W]
+        pool_name(str): 可视化特征图的网络位置的名称。
+            通常选取卷积网络最后输出的特征图  (卷积网络->全局池化->分类网络)
+            默认timm库的全局池化名称为"global_pool",自定义模型需自行确定
+
+        返回img_cam(numpy) [H,W,C] cv2.imwrite直接保存即可。
+        更多可视化算法,请访问 https://github.com/jacobgil/pytorch-grad-cam
+        """
+        # 定位可视化层
+        modules_list = []
+        for name, module in model.named_modules():
+            if pool_name in name:  
+                break
+            modules_list.append(module)
+        target_layers = [modules_list[-1]]  # 全局池化层的前一层
+
+        # 获取类激活映射
+        with GradCAM(model,target_layers,use_cuda = True if torch.cuda.is_available() else False) as cam:
+            cam.batch_size = 32
+            grayscale_cam = cam(
+                input_tensor=img_tensor,
+                targets=None,       # 默认基于模型预测最高分值的类别可视化
+                aug_smooth=True,    # 平滑策略1
+                eigen_smooth=True,  # 平滑策略2
+            )
+
+        # 拼成网格
+        result=[]
+        for i in range(len(img_tensor)):
+            cam_i=grayscale_cam[i] # [224,224]
+            img_i=img_tensor[i].numpy() # [3,224,224]
+
+            img_i = deprocess_image(img_i) # [C,H,W] BGR通道
+            img_i = np.transpose(img_i,(1,2,0)) /255 # [C,H,W] -> [H,W,C]
+            img_cam = show_cam_on_image(img_i, cam_i, use_rgb=False) # 映射到原图
+            result.append(img_cam) 
+        return np.concatenate(result,axis=1) 

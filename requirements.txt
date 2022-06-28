@@ -6,3 +6,4 @@ ptflops
 torch
 torchvision
 grad-cam
+pillow

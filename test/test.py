@@ -1,12 +1,12 @@
 import os
 import sys
 import glob
-
-rootpath = os.path.abspath(os.path.dirname(__file__))+"/../"
-sys.path.append(rootpath)
-sys.path.extend(glob.glob(rootpath + "/*"))
-
-
+import cv2
+rootpath = os.path.abspath(os.path.dirname(__file__))
+sys.path.append(rootpath+"/../")
+sys.path.extend(glob.glob(rootpath +"/../*"))
+import torch
+from PIL import Image
 import torchvision.models as models
 from bobotools.torch_tools import Torch_Tools
 '''
@@ -17,3 +17,18 @@ def test_get_model_info():
     model = models.resnet18(pretrained=False)
     model_info=Torch_Tools.get_model_info([1,3,224,224],model)
     print(model_info)
+
+def test_vis_cam():
+    from pytorch_grad_cam.utils.image import preprocess_image
+    img_path = os.path.join(rootpath,"catdog.png")
+    cv2_img = cv2.imread(img_path, cv2.IMREAD_COLOR)
+    img = Image.fromarray(cv2_img)
+
+    model = models.resnet50(pretrained=True)
+  
+    img=preprocess_image(img)
+    img=torch.cat([img,img.clone()]) # [2,3,224,224]
+
+    img_cam=Torch_Tools.vis_cam(model,img,pool_name="avgpool")
+ 
+    cv2.imwrite(os.path.join(rootpath,"vis.jpg"), img_cam)
