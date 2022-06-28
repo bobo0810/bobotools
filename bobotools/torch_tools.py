@@ -97,10 +97,10 @@ class Torch_Tools(object):
         result=[]
         for i in range(len(img_tensor)):
             cam_i=grayscale_cam[i] # [224,224]
-            img_i=img_tensor[i].numpy() # [3,224,224]
+            img_i=img_tensor[i].numpy() # [3,224,224] [C,H,W] BGR通道
 
-            img_i = deprocess_image(img_i) # [C,H,W] BGR通道
-            img_i = np.transpose(img_i,(1,2,0)) /255 # [C,H,W] -> [H,W,C]
+            img_i = deprocess_image(img_i) # (归一化、减均值、除方差)的逆操作
+            img_i = np.transpose(img_i,(1,2,0)) /255  # 转为[H,W,C]
             img_cam = show_cam_on_image(img_i, cam_i, use_rgb=False) # 映射到原图
             result.append(img_cam) 
-        return np.concatenate(result,axis=1) 
+        return np.concatenate(result,axis=1)  # 合并为网格图
