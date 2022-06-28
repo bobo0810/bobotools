@@ -49,7 +49,7 @@ class Torch_Tools(object):
         result = []
         for i in range(len(img_tensor)):
             # [3,224,224] [C,H,W] BGR通道
-            img_i = deprocess_image(img_tensor[i].numpy())  # (归一化、均值方差)的逆操作
+            img_i = deprocess_image(img_tensor[i].cpu().numpy())  # (归一化、均值方差)的逆操作
             img_i = np.transpose(img_i, (1, 2, 0))  # 转为[H,W,C]
             result.append(img_i)
         return np.concatenate(result, axis=1)  # 拼成网格
