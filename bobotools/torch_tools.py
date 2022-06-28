@@ -39,29 +39,20 @@ class Torch_Tools(object):
         return result_dict
 
     @staticmethod
-    def tensor2img(
-        tensor, mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225), BCHW2BHWC=False
-    ):
+    def vis_tensor(img_tensor):
         """
-        Tenso恢复为图像，用于可视化
-        反归一化、RGB->BGR
+        可视化tensor
 
-        tensor: Tensor,形状[B,C,H,W]
-        BCHW2BHWC: (可选)是否交换Tensor维度
-
-        返回值
-        imgs: Tensor 默认[B,C,H,W]。当BCHW2BHWC=Ture,则返回[B,H,W,C]
+        img_tensor: Tensor,形状[B,C,H,W]
+        返回网格图  [H,W,C]  cv2.imwrite直接保存即可。
         """
-        B, C, H, W = tensor.shape
-
-        t_mean = torch.FloatTensor(mean).view(C, 1, 1).expand(3, H, W)
-        t_std = torch.FloatTensor(std).view(C, 1, 1).expand(3, H, W)
-
-        tensor = tensor * t_std.to(tensor) + t_mean.to(tensor)  # 反归一化
-        tensor = tensor[:, [2, 1, 0], :, :]  # RGB->BGR
-        if BCHW2BHWC:
-            tensor = tensor.permute(0, 2, 3, 1)
-        return tensor
+        result = []
+        for i in range(len(img_tensor)):
+            # [3,224,224] [C,H,W] BGR通道
+            img_i = deprocess_image(img_tensor[i].numpy())  # (归一化、均值方差)的逆操作
+            img_i = np.transpose(img_i, (1, 2, 0))  # 转为[H,W,C]
+            result.append(img_i)
+        return np.concatenate(result, axis=1)  # 拼成网格
 
     @staticmethod
     def vis_cam(model, img_tensor, pool_name="global_pool"):
@@ -77,7 +68,7 @@ class Torch_Tools(object):
         pool_name(str): 可视化特征图的网络位置的名称。
             通常选取卷积网络最后输出的特征图  (卷积网络->全局池化->分类网络)
 
-        返回img_cam(numpy) [H,W,C]  cv2.imwrite直接保存即可。
+        返回网格图img_cam(numpy) [H,W,C]  cv2.imwrite直接保存即可。
         更多可视化算法,请访问 https://github.com/jacobgil/pytorch-grad-cam
         """
         # 验证输入
@@ -110,7 +101,7 @@ class Torch_Tools(object):
             cam_i = grayscale_cam[i]  # [224,224]
             img_i = img_tensor[i].numpy()  # [3,224,224] [C,H,W] BGR通道
 
-            img_i = deprocess_image(img_i)  # (归一化、减均值、除方差)的逆操作
+            img_i = deprocess_image(img_i)  # (归一化、均值方差)的逆操作
             img_i = np.transpose(img_i, (1, 2, 0)) / 255  # 转为[H,W,C] 、归一化
             img_cam = show_cam_on_image(img_i, cam_i, use_rgb=False)  # 映射到原图
             result.append(img_cam)
