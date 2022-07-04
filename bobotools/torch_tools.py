@@ -22,6 +22,7 @@ class Torch_Tools(object):
         input_shape: 输入形状 eg:[1,3,224,224]
         model: 模型
         """
+        print("Start counting model information...")
         result_dict = {"input_shape": input_shape}
 
         # 获取模型大小
