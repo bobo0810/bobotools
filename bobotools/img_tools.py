@@ -171,7 +171,7 @@ class Img_Tools(object):
                 elif len(ann) == 5: 
                     cls, x, y, w, h = ann
                     class_info=class_list[cls] 
-                color = (0, 0, 255)
+               
                 c1 = int((x - w / 2) * width), int((y - h / 2) * height)
                 c2 = int((x + w / 2) * width), int((y + h / 2) * height)
                 # 绘制锚框
