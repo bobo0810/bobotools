@@ -60,7 +60,7 @@ class Torch_Tools(object):
         可视化注意力图
 
         建议:
-        (1)请打印网络结构,确认当前模型的全局池化层名称, 赋值pool_name即可。
+        (1)print(model)打印网络结构,确认当前模型的全局池化层名称, 赋值pool_name即可。
         (2)默认timm库的全局池化名称为"global_pool",自定义模型需自行确定
 
 
