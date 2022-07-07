@@ -16,7 +16,7 @@ pip install git+https://github.com/bobo0810/bobotools.git
 |  方法   | 功能  |
 |  ----  | ----  |
 | get_model_info  | 获取模型信息(模型大小、计算量、参数量、前向推理耗时等) |
-| tensor2img  | Tenso恢复为图像，方便可视化|
+| vis_tensor  | 可视化tensor|
 | vis_cam  | 可视化注意力图|
 
 
