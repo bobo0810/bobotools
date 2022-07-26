@@ -1,6 +1,7 @@
 import torch
 import time
 import os
+from tqdm import tqdm
 from ptflops import get_model_complexity_info
 cur_path = os.path.abspath(os.path.dirname(__file__))
 
@@ -24,7 +25,7 @@ def get_model_complexity(input_shape,model):
     return {"FLOPs":flops,"Params":params}         
 
 @torch.no_grad()
-def get_model_time(input_shape,model,warmup_nums=100, iter_nums=300):
+def get_model_time(input_shape,model,warmup_nums=10, iter_nums=80):
     '''
     获取模型前向耗时
     '''
@@ -44,13 +45,13 @@ def get_model_time(input_shape,model,warmup_nums=100, iter_nums=300):
         model.to(device)
 
         # 预热
-        for _ in range(warmup_nums):
+        for _ in tqdm(range(warmup_nums)):
             model(img)
             if "cuda" in device:
                 torch.cuda.synchronize()
         # 正式
         start = time.time()
-        for _ in range(iter_nums):
+        for _ in tqdm(range(iter_nums)):
             model(img)
             # 每次推理，均同步一次。算均值
             if "cuda" in device:
