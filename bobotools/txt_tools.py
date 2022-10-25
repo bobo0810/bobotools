@@ -13,7 +13,7 @@ class TXT_Tools(object):
         txt_path: txt路径
         split_flag: 分隔符(可选),每行按指定字符分割
         '''
-        assert ".txt" in txt_path
+        # assert ".txt" in txt_path
         try:
             # 判断文件是否存在
             if not os.path.exists(txt_path):
@@ -37,7 +37,7 @@ class TXT_Tools(object):
         lines: 待写入的list
         txt_path: txt保存路径
         '''
-        assert ".txt" in txt_path
+        # assert ".txt" in txt_path
         # 判断目录
         if not os.path.exists(os.path.dirname(txt_path)):
             os.makedirs(os.path.dirname(txt_path))
