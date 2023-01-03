@@ -10,6 +10,7 @@ import torch
 from PIL import Image
 import torchvision.models as models
 from bobotools.torch_tools import Torch_Tools
+from bobotools.img_tools import Img_Tools
 
 """
 pytest自动化测试
@@ -59,4 +60,31 @@ def test_vis_tensor():
     vis_img = Torch_Tools.vis_tensor(img)
 
     cv2.imwrite(os.path.join(rootpath, "vis_img.jpg"), vis_img)
-test_vis_tensor()
+
+
+def test_download_url():
+    """
+    测试 多进程下载url
+    """
+    url_path_list=[
+        {"url":"https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png","path":os.path.join(rootpath, "baidu.png")},
+        {"url": "https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png",
+         "path": os.path.join(rootpath, "baidu.png")},
+        {"url": "https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png",
+         "path": os.path.join(rootpath, "baidu.png")},
+        {"url": "https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png",
+         "path": os.path.join(rootpath, "baidu.png")},
+        {"url": "https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png",
+         "path": os.path.join(rootpath, "baidu.png")},
+        {"url": "https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png",
+         "path": os.path.join(rootpath, "baidu.png")},
+        {"url": "https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png",
+         "path": os.path.join(rootpath, "baidu.png")},
+        {"url": "https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png",
+         "path": os.path.join(rootpath, "baidu.png")},
+        {"url": "https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png",
+         "path": os.path.join(rootpath, "baidu.png")},
+        {"url": "https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png",
+         "path": os.path.join(rootpath, "baidu.png")},
+    ]
+    Img_Tools.download_url(url_path_list,process_nums=3)

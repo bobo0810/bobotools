@@ -4,8 +4,11 @@ import numpy as np
 import cv2
 import torch
 import base64
-import urllib.request
+from multiprocessing import Process
+from urllib.request import urlretrieve
 import os
+from .list_tools import List_Tools
+
 
 class Img_Tools(object):
     """
@@ -14,54 +17,43 @@ class Img_Tools(object):
 
     def __init__(self):
         pass
-    
     @staticmethod
-    def read_web_img(image_url=None,image_file=None,image_base64=None,url_time_out=10):
-        '''
-        参数三选一，当传入多个参数，仅返回最高优先级的图像
+    def download_url(url_path_list,process_nums=10):
+        """
+        多进程下载图片URL
+        url_path_list(list): url和图像保存路径对应的列表
+            eg: [
+                    {"url":"https://xxxx","path":"/home/xxx/abc.jpg"},
+                    ...
+                ]
+        process_nums(int): 进程数
+        """
+        # ----------------------------内部方法-------------------------------------
+        class DownloadProcess(Process):  # 继承Process类
+            def __init__(self, index, url_path_list):
+                super(DownloadProcess, self).__init__()
+                self.index = index
+                self.url_path_list = url_path_list
+            def run(self):
+                print(f"进程{self.index} 开始下载...")
+                for url_path in tqdm(self.url_path_list):
+                    url = url_path["url"]
+                    path = url_path["path"]
+                    try:
+                        urlretrieve(url, path)
+                    except Exception as e:
+                        print(f"下载出错------>url={url},path={path}")
 
-        优先级： 文件 > base64 > url 
-        
-        url_time_out : URL下载耗时限制，默认10秒
-        '''
-        if image_file:
-            try:
-                img = cv2.imdecode(np.frombuffer(image_file, np.uint8), cv2.IMREAD_COLOR)
-                if img.any():
-                    return img
-                else:
-                    return 'IMAGE_ERROR_UNSUPPORTED_FORMAT'
-            except:
-                return 'IMAGE_ERROR_UNSUPPORTED_FORMAT'
-
-        elif image_base64:
-            try:
-                img = base64.b64decode(image_base64)
-                img_array = np.frombuffer(img, np.uint8)
-                img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
-                if img.any():
-                    return img
-                else:
-                    return 'IMAGE_ERROR_UNSUPPORTED_FORMAT'
-            except:
-                return 'IMAGE_ERROR_UNSUPPORTED_FORMAT'
-        elif image_url:
-            try:
-                resp = urllib.request.urlopen(image_url,time_out=url_time_out)
-            except:
-                return 'URL_DOWNLOAD_TIMEOUT'
-            try:
-                image = np.asarray(bytearray(resp.read()), dtype="uint8")
-                img = cv2.imdecode(image, cv2.IMREAD_COLOR)
-                if img.any():
-                    return img
-                else:
-                    return 'IMAGE_ERROR_UNSUPPORTED_FORMAT'
-            except:
-                return 'INVALID_IMAGE_URL'
-        else:
-            return 'MISSING_ARGUMENTS'
-
+        # ------------------------------------------------------------------------
+        process_list = []
+        url_path_list_list = List_Tools.chunk_N(url_path_list, process_nums)
+        for i in range(process_nums):  # 开启N个子进程
+            p = DownloadProcess(index=i, url_path_list=url_path_list_list[i])  # 实例化进程对象
+            p.start()
+            process_list.append(p)
+        for i in process_list:
+            p.join()
+        print("下载结束")
     @staticmethod
     def filter_md5(imgs_list, compare_list=[]):
         """
