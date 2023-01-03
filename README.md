@@ -23,6 +23,7 @@ pip install git+https://github.com/bobo0810/bobotools.git
 ### 图像(img_tools)
 |  方法   | 功能  |
 |  ----  | ----  |
+| download_url  | 多进程下载URL图像|
 | filter_md5  | 对输入的图像列表，互相去重，返回重复图像列表|
 | verify_integrity  | 对输入的图像列表，验证完整性，返回错误图像列表|
 | plot_yolo  | 可视化yolo结果|

@@ -45,6 +45,7 @@ class Img_Tools(object):
                         print(f"下载出错------>url={url},path={path}")
 
         # ------------------------------------------------------------------------
+        print(f"开启{process_nums}个进程")
         process_list = []
         url_path_list_list = List_Tools.chunk_N(url_path_list, process_nums)
         for i in range(process_nums):  # 开启N个子进程
