@@ -1,7 +1,7 @@
 pytest
 tqdm
-opencv-python-headless==4.2.0.34
-opencv-python==4.2.0.34
+opencv-python-headless==4.3.0.38
+opencv-python==4.3.0.38
 numpy
 ptflops
 torch
