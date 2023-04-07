@@ -2,10 +2,9 @@ import hashlib
 from tqdm import tqdm
 import numpy as np
 import cv2
-import torch
-import base64
 from multiprocessing import Process
 from urllib.request import urlretrieve
+from PIL import Image
 import os
 from .list_tools import List_Tools
 
@@ -119,8 +118,12 @@ class Img_Tools(object):
         error_list = []
         for img_path in tqdm(imgs_list):
             try:
+                # cv2验证
                 image = cv2.imread(img_path, cv2.IMREAD_COLOR)
                 assert type(image) is np.ndarray
+
+                # PIL验证
+                image = Image.open(img_path).load()
             except:
                 error_list.append(img_path)
         return error_list
