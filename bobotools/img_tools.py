@@ -4,10 +4,13 @@ import numpy as np
 import cv2
 from multiprocessing import Process
 from urllib.request import urlretrieve
+
 from PIL import Image
 import os
 from .list_tools import List_Tools
-
+import ssl
+# 下载图片时避免报错urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed
+ssl._create_default_https_context = ssl._create_unverified_context
 
 class Img_Tools(object):
     """
